@@ -5,14 +5,13 @@ import 'package:flutter/foundation.dart';
 
 class CloudinaryService {
   // TODO: Replace with your actual Cloudinary credentials
-  final String cloudName = 'YOUR_CLOUD_NAME';
-  final String uploadPreset = 'YOUR_UPLOAD_PRESET';
-  final String apiKey = 'YOUR_API_KEY'; // Optional, depending on preset
+  final String cloudName = 'dhgfdjfb8';
+  final String uploadPreset = 'saathpay';
 
   Future<String?> uploadImage(File imageFile) async {
     try {
       final url = Uri.parse('https://api.cloudinary.com/v1_1/$cloudName/image/upload');
-      
+
       final request = http.MultipartRequest('POST', url)
         ..fields['upload_preset'] = uploadPreset
         ..files.add(await http.MultipartFile.fromPath('file', imageFile.path));
