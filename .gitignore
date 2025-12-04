@@ -1,0 +1,87 @@
+# ---------------------------------------------------------
+# Flutter & Dart
+# ---------------------------------------------------------
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+generated_plugin_registrant.dart
+
+# ---------------------------------------------------------
+# Firebase Config Files (DO NOT COMMIT)
+# ---------------------------------------------------------
+lib/firebase_options.dart
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+macos/Runner/GoogleService-Info.plist
+web/firebase-config.js
+
+# If using dotenv
+.env
+.env*
+
+# ---------------------------------------------------------
+# Android
+# ---------------------------------------------------------
+*.keystore
+*.jks
+
+# Gradle files
+.gradle/
+**/gradle-wrapper.jar
+**/build/
+
+# Local Properties
+android/local.properties
+
+# ---------------------------------------------------------
+# iOS
+# ---------------------------------------------------------
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+
+**/Pods/
+**/.symlinks/
+**/xcuserdata/
+**/DerivedData/
+
+# Xcode build output
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+
+# ---------------------------------------------------------
+# macOS
+# ---------------------------------------------------------
+macos/Pods/
+macos/Flutter/ephemeral/
+
+# ---------------------------------------------------------
+# Web
+# ---------------------------------------------------------
+web/.firebase/
+web/.firebaserc
+
+# ---------------------------------------------------------
+# VS Code / IntelliJ / Misc
+# ---------------------------------------------------------
+.idea/
+.vscode/
+*.iml
+
+# ---------------------------------------------------------
+# Logs / Temp
+# ---------------------------------------------------------
+*.log
+.dart_tool/
+.cache/
+tmp/
