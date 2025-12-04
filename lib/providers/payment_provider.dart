@@ -33,6 +33,12 @@ class PaymentProvider with ChangeNotifier {
     _subscription = null;
   }
 
+  void reset() {
+    stopListening();
+    _payments = [];
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     stopListening();

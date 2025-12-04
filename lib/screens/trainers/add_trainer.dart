@@ -122,6 +122,16 @@ class _AddTrainerScreenState extends State<AddTrainerScreen> {
     String? imageUrl;
     if (_photo != null) {
       imageUrl = await cloudinaryProvider.uploadImage(_photo!);
+      
+      // Show error if upload failed
+      if (imageUrl == null && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to upload photo. Saving trainer without photo.'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      }
     }
 
     final newTrainer = TrainerModel(
@@ -132,7 +142,28 @@ class _AddTrainerScreenState extends State<AddTrainerScreen> {
       photoUrl: imageUrl,
     );
 
-    await trainerProvider.addTrainer(newTrainer);
-    if (mounted) Navigator.pop(context);
+    try {
+      await trainerProvider.addTrainer(newTrainer);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(imageUrl != null 
+              ? 'Trainer added successfully!' 
+              : 'Trainer added successfully (without photo)'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error saving trainer: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }

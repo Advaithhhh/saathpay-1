@@ -33,6 +33,12 @@ class MemberProvider with ChangeNotifier {
     _subscription = null;
   }
 
+  void reset() {
+    stopListening();
+    _members = [];
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     stopListening();

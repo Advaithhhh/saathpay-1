@@ -39,6 +39,18 @@ class AttendanceProvider with ChangeNotifier {
     });
   }
 
+  void stopListening() {
+    _subscription?.cancel();
+    _subscription = null;
+  }
+
+  void reset() {
+    stopListening();
+    _todayAttendance = [];
+    _selectedDate = DateTime.now();
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     _subscription?.cancel();

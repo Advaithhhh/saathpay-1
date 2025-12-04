@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/member_provider.dart';
+import '../../providers/plan_provider.dart';
+import '../../providers/payment_provider.dart';
+import '../../providers/attendance_provider.dart';
+import '../../providers/trainer_provider.dart';
 import '../../widgets/glass_card.dart';
 import '../../theme/app_theme.dart';
 
@@ -52,6 +57,14 @@ class SettingsScreen extends StatelessWidget {
                         leading: const Icon(Icons.logout, color: AppTheme.maroon),
                         title: const Text('Logout', style: TextStyle(color: AppTheme.maroon)),
                         onTap: () {
+                          // Reset all providers to clear cached data
+                          Provider.of<MemberProvider>(context, listen: false).reset();
+                          Provider.of<PlanProvider>(context, listen: false).reset();
+                          Provider.of<PaymentProvider>(context, listen: false).reset();
+                          Provider.of<AttendanceProvider>(context, listen: false).reset();
+                          Provider.of<TrainerProvider>(context, listen: false).reset();
+                          
+                          // Sign out
                           Provider.of<AuthProvider>(context, listen: false).signOut();
                           Navigator.of(context).popUntil((route) => route.isFirst);
                         },

@@ -33,6 +33,12 @@ class PlanProvider with ChangeNotifier {
     _subscription = null;
   }
 
+  void reset() {
+    stopListening();
+    _plans = [];
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     stopListening();

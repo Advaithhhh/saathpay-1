@@ -33,6 +33,12 @@ class TrainerProvider with ChangeNotifier {
     _subscription = null;
   }
 
+  void reset() {
+    stopListening();
+    _trainers = [];
+    notifyListeners();
+  }
+
   @override
   void dispose() {
     stopListening();
