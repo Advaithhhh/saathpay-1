@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../models/trainer_model.dart';
 import '../services/trainer_service.dart';
@@ -11,14 +12,31 @@ class TrainerProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
 
   TrainerProvider() {
-    _init();
+    // Don't listen immediately
   }
 
-  void _init() {
-    _service.getTrainers().listen((trainers) {
+  StreamSubscription<List<TrainerModel>>? _subscription;
+
+  void startListening() {
+    if (_subscription != null) return;
+    
+    _subscription = _service.getTrainers().listen((trainers) {
       _trainers = trainers;
       notifyListeners();
+    }, onError: (error) {
+      print("Error listening to trainers: $error");
     });
+  }
+
+  void stopListening() {
+    _subscription?.cancel();
+    _subscription = null;
+  }
+
+  @override
+  void dispose() {
+    stopListening();
+    super.dispose();
   }
 
   Future<void> addTrainer(TrainerModel trainer) async {

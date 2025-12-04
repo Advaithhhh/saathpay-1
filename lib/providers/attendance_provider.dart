@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../models/attendance_model.dart';
 import '../services/attendance_service.dart';
@@ -13,13 +14,15 @@ class AttendanceProvider with ChangeNotifier {
   DateTime get selectedDate => _selectedDate;
 
   AttendanceProvider() {
-    _init();
+    // Don't listen immediately
   }
 
-  void _init() {
+  StreamSubscription<List<AttendanceModel>>? _subscription;
+
+  void startListening() {
     _fetchAttendanceForDate(_selectedDate);
   }
-  
+
   void setDate(DateTime date) {
     _selectedDate = date;
     _fetchAttendanceForDate(date);
@@ -27,10 +30,19 @@ class AttendanceProvider with ChangeNotifier {
   }
 
   void _fetchAttendanceForDate(DateTime date) {
-    _service.getAttendanceForDate(date).listen((attendance) {
+    _subscription?.cancel();
+    _subscription = _service.getAttendanceForDate(date).listen((attendance) {
       _todayAttendance = attendance;
       notifyListeners();
+    }, onError: (error) {
+      print("Error listening to attendance: $error");
     });
+  }
+
+  @override
+  void dispose() {
+    _subscription?.cancel();
+    super.dispose();
   }
 
   Future<void> markAttendance(AttendanceModel attendance) async {

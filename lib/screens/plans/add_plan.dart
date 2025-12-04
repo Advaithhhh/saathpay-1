@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/plan_model.dart';
 import '../../providers/plan_provider.dart';
+import '../../widgets/glass_card.dart';
+import '../../theme/app_theme.dart';
 
 class AddPlanScreen extends StatefulWidget {
   const AddPlanScreen({super.key});
@@ -22,50 +24,73 @@ class _AddPlanScreenState extends State<AddPlanScreen> {
     final planProvider = Provider.of<PlanProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Plan')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Plan Name'),
-                validator: (value) => value!.isEmpty ? 'Required' : null,
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: _durationController,
-                decoration: const InputDecoration(labelText: 'Duration (Months)'),
-                keyboardType: TextInputType.number,
-                validator: (value) => value!.isEmpty ? 'Required' : null,
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: _priceController,
-                decoration: const InputDecoration(labelText: 'Price'),
-                keyboardType: TextInputType.number,
-                validator: (value) => value!.isEmpty ? 'Required' : null,
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(labelText: 'Description'),
-                maxLines: 3,
-              ),
-              const SizedBox(height: 24),
-              if (planProvider.isLoading)
-                const CircularProgressIndicator()
-              else
-                ElevatedButton(
-                  onPressed: _savePlan,
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 50),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text('Add Plan'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: AppTheme.primaryGradient,
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: GlassCard(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: _nameController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(labelText: 'Plan Name', labelStyle: TextStyle(color: Colors.white70)),
+                        validator: (value) => value!.isEmpty ? 'Required' : null,
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _durationController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(labelText: 'Duration (Months)', labelStyle: TextStyle(color: Colors.white70)),
+                        keyboardType: TextInputType.number,
+                        validator: (value) => value!.isEmpty ? 'Required' : null,
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _priceController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(labelText: 'Price', labelStyle: TextStyle(color: Colors.white70)),
+                        keyboardType: TextInputType.number,
+                        validator: (value) => value!.isEmpty ? 'Required' : null,
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _descriptionController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(labelText: 'Description', labelStyle: TextStyle(color: Colors.white70)),
+                        maxLines: 3,
+                      ),
+                      const SizedBox(height: 24),
+                      if (planProvider.isLoading)
+                        const CircularProgressIndicator(color: Colors.white)
+                      else
+                        ElevatedButton(
+                          onPressed: _savePlan,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppTheme.accentColor,
+                            foregroundColor: Colors.black,
+                            minimumSize: const Size(double.infinity, 50),
+                          ),
+                          child: const Text('Save Plan'),
+                        ),
+                    ],
                   ),
-                  child: const Text('Save Plan'),
                 ),
-            ],
+              ),
+            ),
           ),
         ),
       ),

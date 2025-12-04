@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../models/member_model.dart';
 import '../services/member_service.dart';
@@ -11,14 +12,31 @@ class MemberProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
 
   MemberProvider() {
-    _init();
+    // Don't listen immediately
   }
 
-  void _init() {
-    _service.getMembers().listen((members) {
+  StreamSubscription<List<MemberModel>>? _subscription;
+
+  void startListening() {
+    if (_subscription != null) return;
+    
+    _subscription = _service.getMembers().listen((members) {
       _members = members;
       notifyListeners();
+    }, onError: (error) {
+      print("Error listening to members: $error");
     });
+  }
+
+  void stopListening() {
+    _subscription?.cancel();
+    _subscription = null;
+  }
+
+  @override
+  void dispose() {
+    stopListening();
+    super.dispose();
   }
 
   Future<void> addMember(MemberModel member) async {

@@ -8,6 +8,8 @@ import '../../providers/member_provider.dart';
 import '../../providers/plan_provider.dart';
 import '../../providers/trainer_provider.dart';
 import '../../providers/cloudinary_provider.dart';
+import '../../widgets/glass_card.dart';
+import '../../theme/app_theme.dart';
 
 class AddMemberScreen extends StatefulWidget {
   const AddMemberScreen({super.key});
@@ -25,7 +27,6 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
   final _notesController = TextEditingController();
   
   String _gender = 'Male';
-  String _status = 'Active';
   String? _selectedPlanId;
   String? _selectedTrainerId;
   DateTime _startDate = DateTime.now();
@@ -40,155 +41,178 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
     final memberProvider = Provider.of<MemberProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Member')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              GestureDetector(
-                onTap: _pickImage,
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage: _profileImage != null ? FileImage(_profileImage!) : null,
-                  child: _profileImage == null ? const Icon(Icons.camera_alt, size: 50) : null,
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text('Add Member'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: AppTheme.primaryGradient,
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: GlassCard(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: _pickImage,
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.white24,
+                          backgroundImage: _profileImage != null ? FileImage(_profileImage!) : null,
+                          child: _profileImage == null ? const Icon(Icons.camera_alt, size: 50, color: Colors.white) : null,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: _nameController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(labelText: 'Name', labelStyle: TextStyle(color: Colors.white70)),
+                        validator: (value) => value!.isEmpty ? 'Required' : null,
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _ageController,
+                              style: const TextStyle(color: Colors.white),
+                              decoration: const InputDecoration(labelText: 'Age', labelStyle: TextStyle(color: Colors.white70)),
+                              keyboardType: TextInputType.number,
+                              validator: (value) => value!.isEmpty ? 'Required' : null,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: DropdownButtonFormField<String>(
+                              value: _gender,
+                              dropdownColor: AppTheme.cardBackground,
+                              style: const TextStyle(color: Colors.white),
+                              items: ['Male', 'Female', 'Other']
+                                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                                  .toList(),
+                              onChanged: (val) => setState(() => _gender = val!),
+                              decoration: const InputDecoration(labelText: 'Gender', labelStyle: TextStyle(color: Colors.white70)),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _contactController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(labelText: 'Contact', labelStyle: TextStyle(color: Colors.white70)),
+                        keyboardType: TextInputType.phone,
+                        validator: (value) => value!.isEmpty ? 'Required' : null,
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _emailController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(labelText: 'Email', labelStyle: TextStyle(color: Colors.white70)),
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                      const SizedBox(height: 16),
+                      DropdownButtonFormField<String>(
+                        value: _selectedPlanId,
+                        dropdownColor: AppTheme.cardBackground,
+                        style: const TextStyle(color: Colors.white),
+                        items: planProvider.plans
+                            .map((e) => DropdownMenuItem(value: e.id, child: Text('${e.name} (\u20B9${e.price})')))
+                            .toList(),
+                        onChanged: (val) {
+                          setState(() {
+                            _selectedPlanId = val;
+                            final plan = planProvider.plans.firstWhere((p) => p.id == val);
+                            _endDate = _startDate.add(Duration(days: plan.durationInMonths * 30));
+                          });
+                        },
+                        decoration: const InputDecoration(labelText: 'Membership Plan', labelStyle: TextStyle(color: Colors.white70)),
+                        validator: (value) => value == null ? 'Required' : null,
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextButton.icon(
+                              icon: const Icon(Icons.calendar_today, color: AppTheme.accentColor),
+                              label: Text(DateFormat('yyyy-MM-dd').format(_startDate), style: const TextStyle(color: Colors.white)),
+                              onPressed: () async {
+                                final date = await showDatePicker(
+                                  context: context,
+                                  initialDate: _startDate,
+                                  firstDate: DateTime(2000),
+                                  lastDate: DateTime(2100),
+                                  builder: (context, child) => Theme(data: AppTheme.darkTheme, child: child!),
+                                );
+                                if (date != null) setState(() => _startDate = date);
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: TextButton.icon(
+                              icon: const Icon(Icons.calendar_today, color: AppTheme.accentColor),
+                              label: Text(DateFormat('yyyy-MM-dd').format(_endDate), style: const TextStyle(color: Colors.white)),
+                              onPressed: () async {
+                                final date = await showDatePicker(
+                                  context: context,
+                                  initialDate: _endDate,
+                                  firstDate: DateTime(2000),
+                                  lastDate: DateTime(2100),
+                                  builder: (context, child) => Theme(data: AppTheme.darkTheme, child: child!),
+                                );
+                                if (date != null) setState(() => _endDate = date);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      DropdownButtonFormField<String>(
+                        value: _selectedTrainerId,
+                        dropdownColor: AppTheme.cardBackground,
+                        style: const TextStyle(color: Colors.white),
+                        items: [
+                          const DropdownMenuItem(value: null, child: Text('None')),
+                          ...trainerProvider.trainers.map(
+                              (e) => DropdownMenuItem(value: e.id, child: Text(e.name))),
+                        ],
+                        onChanged: (val) => setState(() => _selectedTrainerId = val),
+                        decoration: const InputDecoration(labelText: 'Assign Trainer', labelStyle: TextStyle(color: Colors.white70)),
+                      ),
+                      const SizedBox(height: 8),
+                      TextFormField(
+                        controller: _notesController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(labelText: 'Notes', labelStyle: TextStyle(color: Colors.white70)),
+                        maxLines: 3,
+                      ),
+                      const SizedBox(height: 24),
+                      if (memberProvider.isLoading || cloudinaryProvider.isUploading)
+                        const CircularProgressIndicator(color: Colors.white)
+                      else
+                        ElevatedButton(
+                          onPressed: _saveMember,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppTheme.accentColor,
+                            foregroundColor: Colors.black,
+                            minimumSize: const Size(double.infinity, 50),
+                          ),
+                          child: const Text('Save Member'),
+                        ),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Name'),
-                validator: (value) => value!.isEmpty ? 'Required' : null,
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _ageController,
-                      decoration: const InputDecoration(labelText: 'Age'),
-                      keyboardType: TextInputType.number,
-                      validator: (value) => value!.isEmpty ? 'Required' : null,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      value: _gender,
-                      items: ['Male', 'Female', 'Other']
-                          .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                          .toList(),
-                      onChanged: (val) => setState(() => _gender = val!),
-                      decoration: const InputDecoration(labelText: 'Gender'),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: _contactController,
-                decoration: const InputDecoration(labelText: 'Contact'),
-                keyboardType: TextInputType.phone,
-                validator: (value) => value!.isEmpty ? 'Required' : null,
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                value: _selectedPlanId,
-                items: planProvider.plans
-                    .map((e) => DropdownMenuItem(value: e.id, child: Text('${e.name} (\u20B9${e.price})')))
-                    .toList(),
-                onChanged: (val) {
-                  setState(() {
-                    _selectedPlanId = val;
-                    // Auto update end date based on plan
-                    final plan = planProvider.plans.firstWhere((p) => p.id == val);
-                    _endDate = _startDate.add(Duration(days: plan.durationInMonths * 30));
-                  });
-                },
-                decoration: const InputDecoration(labelText: 'Membership Plan'),
-                validator: (value) => value == null ? 'Required' : null,
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextButton.icon(
-                      icon: const Icon(Icons.calendar_today),
-                      label: Text(DateFormat('yyyy-MM-dd').format(_startDate)),
-                      onPressed: () async {
-                        final date = await showDatePicker(
-                          context: context,
-                          initialDate: _startDate,
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),
-                        );
-                        if (date != null) setState(() => _startDate = date);
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: TextButton.icon(
-                      icon: const Icon(Icons.calendar_today),
-                      label: Text(DateFormat('yyyy-MM-dd').format(_endDate)),
-                      onPressed: () async {
-                        final date = await showDatePicker(
-                          context: context,
-                          initialDate: _endDate,
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),
-                        );
-                        if (date != null) setState(() => _endDate = date);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              DropdownButtonFormField<String>(
-                value: _selectedTrainerId,
-                items: [
-                  const DropdownMenuItem(value: null, child: Text('None')),
-                  ...trainerProvider.trainers.map(
-                      (e) => DropdownMenuItem(value: e.id, child: Text(e.name))),
-                ],
-                onChanged: (val) => setState(() => _selectedTrainerId = val),
-                decoration: const InputDecoration(labelText: 'Assigned Trainer'),
-              ),
-              const SizedBox(height: 8),
-              DropdownButtonFormField<String>(
-                value: _status,
-                items: ['Active', 'Expired', 'Pending']
-                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                    .toList(),
-                onChanged: (val) => setState(() => _status = val!),
-                decoration: const InputDecoration(labelText: 'Status'),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: _notesController,
-                decoration: const InputDecoration(labelText: 'Notes'),
-                maxLines: 3,
-              ),
-              const SizedBox(height: 24),
-              if (memberProvider.isLoading || cloudinaryProvider.isUploading)
-                const CircularProgressIndicator()
-              else
-                ElevatedButton(
-                  onPressed: _saveMember,
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 50),
-                  ),
-                  child: const Text('Save Member'),
-                ),
-            ],
+            ),
           ),
         ),
       ),
@@ -210,25 +234,17 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
 
     final cloudinaryProvider = Provider.of<CloudinaryProvider>(context, listen: false);
     final memberProvider = Provider.of<MemberProvider>(context, listen: false);
+    final planProvider = Provider.of<PlanProvider>(context, listen: false);
 
     String? imageUrl;
     if (_profileImage != null) {
       imageUrl = await cloudinaryProvider.uploadImage(_profileImage!);
     }
+    
+    final plan = planProvider.plans.firstWhere((p) => p.id == _selectedPlanId);
 
     final newMember = MemberModel(
-      id: '', // Firestore will generate ID? No, service uses add() which generates ID. Model needs ID.
-      // Wait, MemberModel expects ID. But addMember uses .add() which returns DocumentReference.
-      // I should probably generate ID here or let service handle it.
-      // If I use .add(), I don't know ID beforehand.
-      // Best practice: Let Firestore generate ID, then update document with ID, or just use doc.id when reading.
-      // My Model has 'id' field.
-      // I'll pass empty string for now, and rely on Service to ignore it or I should change Service to set ID.
-      // Actually, my Service uses .add(member.toMap()). The map will contain empty ID.
-      // That's fine for now, but better if I generate ID first using uuid or doc().id.
-      // I'll leave it empty and fix if needed. Ideally, I should use .doc().set() if I want to control ID.
-      // Or update the model to make ID optional? No, it's required.
-      // I'll use empty string.
+      id: '',
       name: _nameController.text,
       age: int.parse(_ageController.text),
       gender: _gender,
@@ -236,11 +252,12 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
       email: _emailController.text,
       membershipStart: _startDate,
       membershipEnd: _endDate,
-      membershipType: _selectedPlanId ?? 'Custom', // Should be Plan Name ideally, but ID is fine for ref.
-      status: _status,
+      membershipType: plan.name,
+      status: 'Active',
       assignedTrainerId: _selectedTrainerId,
       notes: _notesController.text,
       profileImage: imageUrl,
+      progressImages: [],
     );
 
     await memberProvider.addMember(newMember);

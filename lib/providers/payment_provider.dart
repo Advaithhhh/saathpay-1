@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../models/payment_model.dart';
 import '../services/payment_service.dart';
@@ -11,14 +12,31 @@ class PaymentProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
 
   PaymentProvider() {
-    _init();
+    // Don't listen immediately
   }
 
-  void _init() {
-    _service.getPayments().listen((payments) {
+  StreamSubscription<List<PaymentModel>>? _subscription;
+
+  void startListening() {
+    if (_subscription != null) return;
+    
+    _subscription = _service.getPayments().listen((payments) {
       _payments = payments;
       notifyListeners();
+    }, onError: (error) {
+      print("Error listening to payments: $error");
     });
+  }
+
+  void stopListening() {
+    _subscription?.cancel();
+    _subscription = null;
+  }
+
+  @override
+  void dispose() {
+    stopListening();
+    super.dispose();
   }
 
   Future<void> addPayment(PaymentModel payment) async {

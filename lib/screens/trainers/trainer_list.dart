@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../../providers/trainer_provider.dart';
 import 'add_trainer.dart';
 import 'trainer_details.dart';
+import '../../widgets/glass_card.dart';
+import '../../theme/app_theme.dart';
 
 class TrainerListScreen extends StatelessWidget {
   const TrainerListScreen({super.key});
@@ -13,44 +15,65 @@ class TrainerListScreen extends StatelessWidget {
     final trainers = trainerProvider.trainers;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Trainers')),
-      body: trainers.isEmpty
-          ? const Center(child: Text('No trainers found'))
-          : ListView.builder(
-              itemCount: trainers.length,
-              itemBuilder: (context, index) {
-                final trainer = trainers[index];
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: trainer.photoUrl != null
-                        ? NetworkImage(trainer.photoUrl!)
-                        : null,
-                    child: trainer.photoUrl == null
-                        ? Text(trainer.name[0])
-                        : null,
-                  ),
-                  title: Text(trainer.name),
-                  subtitle: Text(trainer.contact),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => TrainerDetailsScreen(trainer: trainer),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text('Trainers'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: AppTheme.primaryGradient,
+        ),
+        child: SafeArea(
+          child: trainers.isEmpty
+              ? const Center(child: Text('No trainers found', style: TextStyle(color: Colors.white)))
+              : ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: trainers.length,
+                  itemBuilder: (context, index) {
+                    final trainer = trainers[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12.0),
+                      child: GlassCard(
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(12),
+                          leading: CircleAvatar(
+                            radius: 25,
+                            backgroundImage: trainer.photoUrl != null
+                                ? NetworkImage(trainer.photoUrl!)
+                                : null,
+                            child: trainer.photoUrl == null
+                                ? Text(trainer.name[0], style: const TextStyle(fontWeight: FontWeight.bold))
+                                : null,
+                          ),
+                          title: Text(trainer.name, style: AppTheme.titleMedium.copyWith(fontSize: 16)),
+                          subtitle: Text(trainer.contact, style: AppTheme.bodyMedium),
+                          trailing: const Icon(Icons.chevron_right, color: Colors.white54),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => TrainerDetailsScreen(trainer: trainer),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     );
                   },
-                );
-              },
-            ),
+                ),
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: AppTheme.accentColor,
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const AddTrainerScreen()),
           );
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.black),
       ),
     );
   }

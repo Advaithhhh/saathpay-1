@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import '../../providers/attendance_provider.dart';
 import '../../providers/member_provider.dart';
 import '../../models/attendance_model.dart';
+import '../../widgets/glass_card.dart';
+import '../../theme/app_theme.dart';
 
 class AttendanceScreen extends StatelessWidget {
   const AttendanceScreen({super.key});
@@ -17,8 +19,11 @@ class AttendanceScreen extends StatelessWidget {
     final activeMembers = memberProvider.members.where((m) => m.status == 'Active').toList();
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text('Attendance'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.calendar_today),
@@ -28,6 +33,12 @@ class AttendanceScreen extends StatelessWidget {
                 initialDate: attendanceProvider.selectedDate,
                 firstDate: DateTime(2000),
                 lastDate: DateTime(2100),
+                builder: (context, child) {
+                  return Theme(
+                    data: AppTheme.darkTheme, // Ensure date picker matches theme
+                    child: child!,
+                  );
+                },
               );
               if (date != null) {
                 attendanceProvider.setDate(date);
@@ -36,70 +47,88 @@ class AttendanceScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Date: ${DateFormat('yyyy-MM-dd').format(attendanceProvider.selectedDate)}',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: activeMembers.length,
-              itemBuilder: (context, index) {
-                final member = activeMembers[index];
-                // Check if attendance exists for this member on selected date
-                final attendance = attendanceProvider.todayAttendance.firstWhere(
-                  (a) => a.memberId == member.id,
-                  orElse: () => AttendanceModel(
-                    id: '',
-                    memberId: member.id,
-                    memberName: member.name,
-                    date: attendanceProvider.selectedDate,
-                    status: 'Absent',
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: AppTheme.primaryGradient,
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: GlassCard(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Date:',
+                          style: AppTheme.bodyLarge,
+                        ),
+                        Text(
+                          DateFormat('yyyy-MM-dd').format(attendanceProvider.selectedDate),
+                          style: AppTheme.titleMedium,
+                        ),
+                      ],
+                    ),
                   ),
-                );
-                
-                final isPresent = attendance.status == 'Present';
-
-                return CheckboxListTile(
-                  title: Text(member.name),
-                  value: isPresent,
-                  onChanged: (val) {
-                    // Mark attendance
-                    final newStatus = val == true ? 'Present' : 'Absent';
-                    // Ideally we should update if exists, or add if not.
-                    // My service just adds. I should probably handle update in service or here.
-                    // For MVP, I'll just add a new record. 
-                    // Wait, if I add multiple records for same day, it will be messy.
-                    // I should check if record exists in provider list.
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: activeMembers.length,
+                  itemBuilder: (context, index) {
+                    final member = activeMembers[index];
+                    // Check if attendance exists for this member on selected date
+                    final attendance = attendanceProvider.todayAttendance.firstWhere(
+                      (a) => a.memberId == member.id,
+                      orElse: () => AttendanceModel(
+                        id: '',
+                        memberId: member.id,
+                        memberName: member.name,
+                        date: attendanceProvider.selectedDate,
+                        status: 'Absent',
+                      ),
+                    );
                     
-                    // If record exists (id is not empty), update it?
-                    // My provider/service doesn't have updateAttendance yet.
-                    // I'll skip update for now and just allow marking 'Present' once.
-                    if (attendance.id.isEmpty && val == true) {
-                       attendanceProvider.markAttendance(AttendanceModel(
-                         id: '',
-                         memberId: member.id,
-                         memberName: member.name,
-                         date: attendanceProvider.selectedDate,
-                         status: 'Present',
-                         checkInTime: DateTime.now(),
-                       ));
-                    } else if (attendance.id.isNotEmpty) {
-                      // Already marked. 
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Attendance already marked.')),
-                      );
-                    }
+                    final isPresent = attendance.status == 'Present';
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: GlassCard(
+                        child: CheckboxListTile(
+                          title: Text(member.name, style: const TextStyle(color: Colors.white)),
+                          value: isPresent,
+                          activeColor: AppTheme.accentColor,
+                          checkColor: Colors.black,
+                          side: const BorderSide(color: Colors.white54),
+                          onChanged: (val) {
+                            if (attendance.id.isEmpty && val == true) {
+                               attendanceProvider.markAttendance(AttendanceModel(
+                                 id: '',
+                                 memberId: member.id,
+                                 memberName: member.name,
+                                 date: attendanceProvider.selectedDate,
+                                 status: 'Present',
+                                 checkInTime: DateTime.now(),
+                               ));
+                            } else if (attendance.id.isNotEmpty) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Attendance already marked.')),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    );
                   },
-                );
-              },
-            ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

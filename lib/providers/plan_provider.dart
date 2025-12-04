@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../models/plan_model.dart';
 import '../services/plan_service.dart';
@@ -11,14 +12,31 @@ class PlanProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
 
   PlanProvider() {
-    _init();
+    // Don't listen immediately to avoid permission errors before login
   }
 
-  void _init() {
-    _service.getPlans().listen((plans) {
+  StreamSubscription<List<PlanModel>>? _subscription;
+
+  void startListening() {
+    if (_subscription != null) return; // Already listening
+    
+    _subscription = _service.getPlans().listen((plans) {
       _plans = plans;
       notifyListeners();
+    }, onError: (error) {
+      print("Error listening to plans: $error");
     });
+  }
+
+  void stopListening() {
+    _subscription?.cancel();
+    _subscription = null;
+  }
+
+  @override
+  void dispose() {
+    stopListening();
+    super.dispose();
   }
 
   Future<void> addPlan(PlanModel plan) async {

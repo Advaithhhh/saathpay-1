@@ -8,19 +8,28 @@ import '../../providers/cloudinary_provider.dart';
 import '../../widgets/glass_card.dart';
 import '../../theme/app_theme.dart';
 
-class AddTrainerScreen extends StatefulWidget {
-  const AddTrainerScreen({super.key});
+class EditTrainerScreen extends StatefulWidget {
+  final TrainerModel trainer;
+  const EditTrainerScreen({super.key, required this.trainer});
 
   @override
-  State<AddTrainerScreen> createState() => _AddTrainerScreenState();
+  State<EditTrainerScreen> createState() => _EditTrainerScreenState();
 }
 
-class _AddTrainerScreenState extends State<AddTrainerScreen> {
+class _EditTrainerScreenState extends State<EditTrainerScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _contactController = TextEditingController();
-  final _emailController = TextEditingController();
+  late TextEditingController _nameController;
+  late TextEditingController _contactController;
+  late TextEditingController _emailController;
   File? _photo;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.trainer.name);
+    _contactController = TextEditingController(text: widget.trainer.contact);
+    _emailController = TextEditingController(text: widget.trainer.email);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +39,7 @@ class _AddTrainerScreenState extends State<AddTrainerScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        title: const Text('Add Trainer'),
+        title: const Text('Edit Trainer'),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -53,8 +62,12 @@ class _AddTrainerScreenState extends State<AddTrainerScreen> {
                         child: CircleAvatar(
                           radius: 50,
                           backgroundColor: Colors.white24,
-                          backgroundImage: _photo != null ? FileImage(_photo!) : null,
-                          child: _photo == null ? const Icon(Icons.camera_alt, size: 50, color: Colors.white) : null,
+                          backgroundImage: _photo != null 
+                              ? FileImage(_photo!) 
+                              : (widget.trainer.photoUrl != null ? NetworkImage(widget.trainer.photoUrl!) : null) as ImageProvider?,
+                          child: (_photo == null && widget.trainer.photoUrl == null) 
+                              ? const Icon(Icons.camera_alt, size: 50, color: Colors.white) 
+                              : null,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -90,7 +103,7 @@ class _AddTrainerScreenState extends State<AddTrainerScreen> {
                             foregroundColor: Colors.black,
                             minimumSize: const Size(double.infinity, 50),
                           ),
-                          child: const Text('Save Trainer'),
+                          child: const Text('Update Trainer'),
                         ),
                     ],
                   ),
@@ -119,20 +132,20 @@ class _AddTrainerScreenState extends State<AddTrainerScreen> {
     final cloudinaryProvider = Provider.of<CloudinaryProvider>(context, listen: false);
     final trainerProvider = Provider.of<TrainerProvider>(context, listen: false);
 
-    String? imageUrl;
+    String? imageUrl = widget.trainer.photoUrl;
     if (_photo != null) {
       imageUrl = await cloudinaryProvider.uploadImage(_photo!);
     }
 
-    final newTrainer = TrainerModel(
-      id: '',
+    final updatedTrainer = TrainerModel(
+      id: widget.trainer.id,
       name: _nameController.text,
       contact: _contactController.text,
       email: _emailController.text,
       photoUrl: imageUrl,
     );
 
-    await trainerProvider.addTrainer(newTrainer);
+    await trainerProvider.updateTrainer(updatedTrainer);
     if (mounted) Navigator.pop(context);
   }
 }
