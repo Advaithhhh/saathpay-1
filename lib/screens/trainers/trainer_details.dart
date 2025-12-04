@@ -67,7 +67,7 @@ class TrainerDetailsScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         _buildDetailRow(Icons.phone, trainer.contact),
-                        const Divider(color: Colors.white24),
+                        const Divider(color: AppTheme.maroon),
                         _buildDetailRow(Icons.email, trainer.email),
                       ],
                     ),
@@ -78,7 +78,7 @@ class TrainerDetailsScreen extends StatelessWidget {
                     style: AppTheme.titleMedium),
                 const SizedBox(height: 16),
                 assignedMembers.isEmpty
-                    ? const Text('No members assigned.', style: TextStyle(color: Colors.white70))
+                    ? const Text('No members assigned.', style: TextStyle(color: AppTheme.textSecondary))
                     : ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
@@ -94,11 +94,11 @@ class TrainerDetailsScreen extends StatelessWidget {
                                       ? NetworkImage(member.profileImage!)
                                       : null,
                                   child: member.profileImage == null
-                                      ? Text(member.name[0])
+                                      ? Text(member.name[0], style: const TextStyle(color: AppTheme.maroon))
                                       : null,
                                 ),
-                                title: Text(member.name, style: const TextStyle(color: Colors.white)),
-                                subtitle: Text(member.status, style: const TextStyle(color: Colors.white70)),
+                                title: Text(member.name, style: const TextStyle(color: AppTheme.textPrimary)),
+                                subtitle: Text(member.status, style: const TextStyle(color: AppTheme.textSecondary)),
                               ),
                             ),
                           );

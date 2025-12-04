@@ -56,42 +56,42 @@ class _EditPlanScreenState extends State<EditPlanScreen> {
                     children: [
                       TextFormField(
                         controller: _nameController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(labelText: 'Plan Name', labelStyle: TextStyle(color: Colors.white70)),
+                        style: const TextStyle(color: AppTheme.textPrimary),
+                        decoration: const InputDecoration(labelText: 'Plan Name', labelStyle: TextStyle(color: AppTheme.textSecondary)),
                         validator: (value) => value!.isEmpty ? 'Required' : null,
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _durationController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(labelText: 'Duration (Months)', labelStyle: TextStyle(color: Colors.white70)),
+                        style: const TextStyle(color: AppTheme.textPrimary),
+                        decoration: const InputDecoration(labelText: 'Duration (Months)', labelStyle: TextStyle(color: AppTheme.textSecondary)),
                         keyboardType: TextInputType.number,
                         validator: (value) => value!.isEmpty ? 'Required' : null,
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _priceController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(labelText: 'Price', labelStyle: TextStyle(color: Colors.white70)),
+                        style: const TextStyle(color: AppTheme.textPrimary),
+                        decoration: const InputDecoration(labelText: 'Price', labelStyle: TextStyle(color: AppTheme.textSecondary)),
                         keyboardType: TextInputType.number,
                         validator: (value) => value!.isEmpty ? 'Required' : null,
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _descriptionController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(labelText: 'Description', labelStyle: TextStyle(color: Colors.white70)),
+                        style: const TextStyle(color: AppTheme.textPrimary),
+                        decoration: const InputDecoration(labelText: 'Description', labelStyle: TextStyle(color: AppTheme.textSecondary)),
                         maxLines: 3,
                       ),
                       const SizedBox(height: 24),
                       if (planProvider.isLoading)
-                        const CircularProgressIndicator(color: Colors.white)
+                        const CircularProgressIndicator(color: AppTheme.maroon)
                       else
                         ElevatedButton(
                           onPressed: _savePlan,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.accentColor,
-                            foregroundColor: Colors.black,
+                            backgroundColor: AppTheme.maroon,
+                            foregroundColor: Colors.white,
                             minimumSize: const Size(double.infinity, 50),
                           ),
                           child: const Text('Update Plan'),

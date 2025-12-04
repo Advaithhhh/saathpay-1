@@ -61,46 +61,46 @@ class _EditTrainerScreenState extends State<EditTrainerScreen> {
                         onTap: _pickImage,
                         child: CircleAvatar(
                           radius: 50,
-                          backgroundColor: Colors.white24,
+                          backgroundColor: AppTheme.beige,
                           backgroundImage: _photo != null 
                               ? FileImage(_photo!) 
                               : (widget.trainer.photoUrl != null ? NetworkImage(widget.trainer.photoUrl!) : null) as ImageProvider?,
                           child: (_photo == null && widget.trainer.photoUrl == null) 
-                              ? const Icon(Icons.camera_alt, size: 50, color: Colors.white) 
+                              ? const Icon(Icons.camera_alt, size: 50, color: AppTheme.maroon) 
                               : null,
                         ),
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _nameController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(labelText: 'Name', labelStyle: TextStyle(color: Colors.white70)),
+                        style: const TextStyle(color: AppTheme.textPrimary),
+                        decoration: const InputDecoration(labelText: 'Name', labelStyle: TextStyle(color: AppTheme.textSecondary)),
                         validator: (value) => value!.isEmpty ? 'Required' : null,
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _contactController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(labelText: 'Contact', labelStyle: TextStyle(color: Colors.white70)),
+                        style: const TextStyle(color: AppTheme.textPrimary),
+                        decoration: const InputDecoration(labelText: 'Contact', labelStyle: TextStyle(color: AppTheme.textSecondary)),
                         keyboardType: TextInputType.phone,
                         validator: (value) => value!.isEmpty ? 'Required' : null,
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _emailController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(labelText: 'Email', labelStyle: TextStyle(color: Colors.white70)),
+                        style: const TextStyle(color: AppTheme.textPrimary),
+                        decoration: const InputDecoration(labelText: 'Email', labelStyle: TextStyle(color: AppTheme.textSecondary)),
                         keyboardType: TextInputType.emailAddress,
                       ),
                       const SizedBox(height: 24),
                       if (trainerProvider.isLoading || cloudinaryProvider.isUploading)
-                        const CircularProgressIndicator(color: Colors.white)
+                        const CircularProgressIndicator(color: AppTheme.maroon)
                       else
                         ElevatedButton(
                           onPressed: _saveTrainer,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.accentColor,
-                            foregroundColor: Colors.black,
+                            backgroundColor: AppTheme.maroon,
+                            foregroundColor: Colors.white,
                             minimumSize: const Size(double.infinity, 50),
                           ),
                           child: const Text('Update Trainer'),

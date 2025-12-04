@@ -65,73 +65,75 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
         ],
       ),
       drawer: _buildDrawer(context, user),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppTheme.primaryGradient, // Use theme gradient
-        ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildWelcomeCard(user),
-                const SizedBox(height: 24),
-                Text('Overview', style: AppTheme.titleMedium),
-                const SizedBox(height: 16),
-                GridView.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    _buildStatCard(
-                      'Members',
-                      '${memberProvider.members.length}',
-                      Icons.people,
-                      Colors.blue,
-                      () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MemberListScreen())),
-                    ),
-                    _buildStatCard(
-                      'Revenue',
-                      '\u20B9${paymentProvider.payments.fold(0.0, (sum, item) => sum + item.amount)}',
-                      Icons.attach_money,
-                      Colors.green,
-                      () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PaymentListScreen())),
-                    ),
-                    _buildStatCard(
-                      'Plans',
-                      'Manage',
-                      Icons.card_membership,
-                      Colors.orange,
-                      () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PlanListScreen())),
-                    ),
-                    _buildStatCard(
-                      'Trainers',
-                      'Manage',
-                      Icons.fitness_center,
-                      Colors.purple,
-                      () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TrainerListScreen())),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                Text('Quick Actions', style: AppTheme.titleMedium),
-                const SizedBox(height: 16),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
+      body: SizedBox.expand(
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: AppTheme.primaryGradient,
+          ),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildWelcomeCard(user),
+                  const SizedBox(height: 24),
+                  Text('Overview', style: AppTheme.titleMediumLight),
+                  const SizedBox(height: 16),
+                  GridView.count(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     children: [
-                      _buildActionChip(context, 'Add Member', Icons.person_add, const AddMemberScreen()),
-                      const SizedBox(width: 12),
-                      _buildActionChip(context, 'Add Payment', Icons.payment, const AddPaymentScreen()),
-                      const SizedBox(width: 12),
-                      _buildActionChip(context, 'Attendance', Icons.calendar_today, const AttendanceScreen()),
+                      _buildStatCard(
+                        'Members',
+                        '${memberProvider.members.length}',
+                        Icons.people,
+                        Colors.blue,
+                        () => Navigator.push(context, MaterialPageRoute(builder: (_) => const MemberListScreen())),
+                      ),
+                      _buildStatCard(
+                        'Revenue',
+                        '\u20B9${paymentProvider.payments.fold(0.0, (sum, item) => sum + item.amount)}',
+                        Icons.attach_money,
+                        Colors.green,
+                        () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PaymentListScreen())),
+                      ),
+                      _buildStatCard(
+                        'Plans',
+                        'Manage',
+                        Icons.card_membership,
+                        Colors.orange,
+                        () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PlanListScreen())),
+                      ),
+                      _buildStatCard(
+                        'Trainers',
+                        'Manage',
+                        Icons.fitness_center,
+                        Colors.purple,
+                        () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TrainerListScreen())),
+                      ),
                     ],
                   ),
-                ),
-              ],
+                  const SizedBox(height: 24),
+                  Text('Quick Actions', style: AppTheme.titleMediumLight),
+                  const SizedBox(height: 16),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        _buildActionChip(context, 'Add Member', Icons.person_add, const AddMemberScreen()),
+                        const SizedBox(width: 12),
+                        _buildActionChip(context, 'Add Payment', Icons.payment, const AddPaymentScreen()),
+                        const SizedBox(width: 12),
+                        _buildActionChip(context, 'Attendance', Icons.calendar_today, const AttendanceScreen()),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -194,7 +196,7 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
     return ActionChip(
       avatar: Icon(icon, size: 18, color: Colors.white),
       label: Text(label, style: const TextStyle(color: Colors.white)),
-      backgroundColor: Colors.white.withOpacity(0.1),
+      backgroundColor: AppTheme.secondaryColor,
       side: BorderSide.none,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       onPressed: () {
@@ -205,7 +207,7 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
 
   Widget _buildDrawer(BuildContext context, user) {
     return Drawer(
-      backgroundColor: AppTheme.cardBackground,
+      backgroundColor: AppTheme.beige,
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
@@ -213,11 +215,12 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
             decoration: const BoxDecoration(
               gradient: AppTheme.primaryGradient,
             ),
-            accountName: Text(user?.displayName ?? 'Owner'),
-            accountEmail: Text(user?.email ?? ''),
+            accountName: Text(user?.displayName ?? 'Owner', style: const TextStyle(color: Colors.white)),
+            accountEmail: Text(user?.email ?? '', style: const TextStyle(color: Colors.white70)),
             currentAccountPicture: CircleAvatar(
+              backgroundColor: Colors.white,
               backgroundImage: user?.photoURL != null ? NetworkImage(user!.photoURL!) : null,
-              child: user?.photoURL == null ? const Icon(Icons.person) : null,
+              child: user?.photoURL == null ? const Icon(Icons.person, color: AppTheme.maroon) : null,
             ),
           ),
           _buildDrawerItem(context, Icons.dashboard, 'Dashboard', null),
@@ -226,7 +229,7 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
           _buildDrawerItem(context, Icons.card_membership, 'Plans', const PlanListScreen()),
           _buildDrawerItem(context, Icons.payment, 'Payments', const PaymentListScreen()),
           _buildDrawerItem(context, Icons.calendar_today, 'Attendance', const AttendanceScreen()),
-          const Divider(color: Colors.white24),
+          const Divider(color: AppTheme.maroon),
           _buildDrawerItem(context, Icons.settings, 'Settings', const SettingsScreen()),
         ],
       ),
@@ -235,8 +238,8 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
 
   Widget _buildDrawerItem(BuildContext context, IconData icon, String title, Widget? screen) {
     return ListTile(
-      leading: Icon(icon, color: Colors.white70),
-      title: Text(title, style: const TextStyle(color: Colors.white)),
+      leading: Icon(icon, color: AppTheme.maroon),
+      title: Text(title, style: AppTheme.bodyLarge.copyWith(color: AppTheme.maroon)),
       onTap: () {
         Navigator.pop(context); // Close drawer
         if (screen != null) {

@@ -14,7 +14,7 @@ class AttendanceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final attendanceProvider = Provider.of<AttendanceProvider>(context);
     final memberProvider = Provider.of<MemberProvider>(context);
-    
+
     // Get all active members
     final activeMembers = memberProvider.members.where((m) => m.status == 'Active').toList();
 
@@ -35,7 +35,7 @@ class AttendanceScreen extends StatelessWidget {
                 lastDate: DateTime(2100),
                 builder: (context, child) {
                   return Theme(
-                    data: AppTheme.darkTheme, // Ensure date picker matches theme
+                    data: AppTheme.warmTheme, // Ensure date picker matches theme
                     child: child!,
                   );
                 },
@@ -47,86 +47,88 @@ class AttendanceScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppTheme.primaryGradient,
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: GlassCard(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Date:',
-                          style: AppTheme.bodyLarge,
-                        ),
-                        Text(
-                          DateFormat('yyyy-MM-dd').format(attendanceProvider.selectedDate),
-                          style: AppTheme.titleMedium,
-                        ),
-                      ],
+      body: SizedBox.expand(
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: AppTheme.primaryGradient,
+          ),
+          child: SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: GlassCard(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Date:',
+                            style: AppTheme.bodyLarge,
+                          ),
+                          Text(
+                            DateFormat('yyyy-MM-dd').format(attendanceProvider.selectedDate),
+                            style: AppTheme.titleMedium,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: activeMembers.length,
-                  itemBuilder: (context, index) {
-                    final member = activeMembers[index];
-                    // Check if attendance exists for this member on selected date
-                    final attendance = attendanceProvider.todayAttendance.firstWhere(
-                      (a) => a.memberId == member.id,
-                      orElse: () => AttendanceModel(
-                        id: '',
-                        memberId: member.id,
-                        memberName: member.name,
-                        date: attendanceProvider.selectedDate,
-                        status: 'Absent',
-                      ),
-                    );
-                    
-                    final isPresent = attendance.status == 'Present';
-
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: GlassCard(
-                        child: CheckboxListTile(
-                          title: Text(member.name, style: const TextStyle(color: Colors.white)),
-                          value: isPresent,
-                          activeColor: AppTheme.accentColor,
-                          checkColor: Colors.black,
-                          side: const BorderSide(color: Colors.white54),
-                          onChanged: (val) {
-                            if (attendance.id.isEmpty && val == true) {
-                               attendanceProvider.markAttendance(AttendanceModel(
-                                 id: '',
-                                 memberId: member.id,
-                                 memberName: member.name,
-                                 date: attendanceProvider.selectedDate,
-                                 status: 'Present',
-                                 checkInTime: DateTime.now(),
-                               ));
-                            } else if (attendance.id.isNotEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Attendance already marked.')),
-                              );
-                            }
-                          },
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: activeMembers.length,
+                    itemBuilder: (context, index) {
+                      final member = activeMembers[index];
+                      // Check if attendance exists for this member on selected date
+                      final attendance = attendanceProvider.todayAttendance.firstWhere(
+                        (a) => a.memberId == member.id,
+                        orElse: () => AttendanceModel(
+                          id: '',
+                          memberId: member.id,
+                          memberName: member.name,
+                          date: attendanceProvider.selectedDate,
+                          status: 'Absent',
                         ),
-                      ),
-                    );
-                  },
+                      );
+
+                      final isPresent = attendance.status == 'Present';
+
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: GlassCard(
+                          child: CheckboxListTile(
+                            title: Text(member.name, style: const TextStyle(color: AppTheme.textPrimary)),
+                            value: isPresent,
+                            activeColor: AppTheme.maroon,
+                            checkColor: Colors.white,
+                            side: const BorderSide(color: AppTheme.textSecondary),
+                            onChanged: (val) {
+                              if (attendance.id.isEmpty && val == true) {
+                                attendanceProvider.markAttendance(AttendanceModel(
+                                  id: '',
+                                  memberId: member.id,
+                                  memberName: member.name,
+                                  date: attendanceProvider.selectedDate,
+                                  status: 'Present',
+                                  checkInTime: DateTime.now(),
+                                ));
+                              } else if (attendance.id.isNotEmpty) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Attendance already marked.')),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

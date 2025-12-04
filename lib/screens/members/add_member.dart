@@ -65,16 +65,16 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                         onTap: _pickImage,
                         child: CircleAvatar(
                           radius: 50,
-                          backgroundColor: Colors.white24,
+                          backgroundColor: AppTheme.beige,
                           backgroundImage: _profileImage != null ? FileImage(_profileImage!) : null,
-                          child: _profileImage == null ? const Icon(Icons.camera_alt, size: 50, color: Colors.white) : null,
+                          child: _profileImage == null ? const Icon(Icons.camera_alt, size: 50, color: AppTheme.maroon) : null,
                         ),
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _nameController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(labelText: 'Name', labelStyle: TextStyle(color: Colors.white70)),
+                        style: const TextStyle(color: AppTheme.textPrimary),
+                        decoration: const InputDecoration(labelText: 'Name', labelStyle: TextStyle(color: AppTheme.textSecondary)),
                         validator: (value) => value!.isEmpty ? 'Required' : null,
                       ),
                       const SizedBox(height: 8),
@@ -83,8 +83,8 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                           Expanded(
                             child: TextFormField(
                               controller: _ageController,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: const InputDecoration(labelText: 'Age', labelStyle: TextStyle(color: Colors.white70)),
+                              style: const TextStyle(color: AppTheme.textPrimary),
+                              decoration: const InputDecoration(labelText: 'Age', labelStyle: TextStyle(color: AppTheme.textSecondary)),
                               keyboardType: TextInputType.number,
                               validator: (value) => value!.isEmpty ? 'Required' : null,
                             ),
@@ -93,13 +93,13 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                           Expanded(
                             child: DropdownButtonFormField<String>(
                               value: _gender,
-                              dropdownColor: AppTheme.cardBackground,
-                              style: const TextStyle(color: Colors.white),
+                              dropdownColor: Colors.white,
+                              style: const TextStyle(color: AppTheme.textPrimary),
                               items: ['Male', 'Female', 'Other']
                                   .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                                   .toList(),
                               onChanged: (val) => setState(() => _gender = val!),
-                              decoration: const InputDecoration(labelText: 'Gender', labelStyle: TextStyle(color: Colors.white70)),
+                              decoration: const InputDecoration(labelText: 'Gender', labelStyle: TextStyle(color: AppTheme.textSecondary)),
                             ),
                           ),
                         ],
@@ -107,23 +107,23 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _contactController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(labelText: 'Contact', labelStyle: TextStyle(color: Colors.white70)),
+                        style: const TextStyle(color: AppTheme.textPrimary),
+                        decoration: const InputDecoration(labelText: 'Contact', labelStyle: TextStyle(color: AppTheme.textSecondary)),
                         keyboardType: TextInputType.phone,
                         validator: (value) => value!.isEmpty ? 'Required' : null,
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _emailController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(labelText: 'Email', labelStyle: TextStyle(color: Colors.white70)),
+                        style: const TextStyle(color: AppTheme.textPrimary),
+                        decoration: const InputDecoration(labelText: 'Email', labelStyle: TextStyle(color: AppTheme.textSecondary)),
                         keyboardType: TextInputType.emailAddress,
                       ),
                       const SizedBox(height: 16),
                       DropdownButtonFormField<String>(
                         value: _selectedPlanId,
-                        dropdownColor: AppTheme.cardBackground,
-                        style: const TextStyle(color: Colors.white),
+                        dropdownColor: Colors.white,
+                        style: const TextStyle(color: AppTheme.textPrimary),
                         items: planProvider.plans
                             .map((e) => DropdownMenuItem(value: e.id, child: Text('${e.name} (\u20B9${e.price})')))
                             .toList(),
@@ -134,7 +134,7 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                             _endDate = _startDate.add(Duration(days: plan.durationInMonths * 30));
                           });
                         },
-                        decoration: const InputDecoration(labelText: 'Membership Plan', labelStyle: TextStyle(color: Colors.white70)),
+                        decoration: const InputDecoration(labelText: 'Membership Plan', labelStyle: TextStyle(color: AppTheme.textSecondary)),
                         validator: (value) => value == null ? 'Required' : null,
                       ),
                       const SizedBox(height: 8),
@@ -142,15 +142,15 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                         children: [
                           Expanded(
                             child: TextButton.icon(
-                              icon: const Icon(Icons.calendar_today, color: AppTheme.accentColor),
-                              label: Text(DateFormat('yyyy-MM-dd').format(_startDate), style: const TextStyle(color: Colors.white)),
+                              icon: const Icon(Icons.calendar_today, color: AppTheme.maroon),
+                              label: Text(DateFormat('yyyy-MM-dd').format(_startDate), style: const TextStyle(color: AppTheme.textPrimary)),
                               onPressed: () async {
                                 final date = await showDatePicker(
                                   context: context,
                                   initialDate: _startDate,
                                   firstDate: DateTime(2000),
                                   lastDate: DateTime(2100),
-                                  builder: (context, child) => Theme(data: AppTheme.darkTheme, child: child!),
+                                  builder: (context, child) => Theme(data: AppTheme.warmTheme, child: child!),
                                 );
                                 if (date != null) setState(() => _startDate = date);
                               },
@@ -159,15 +159,15 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                           const SizedBox(width: 16),
                           Expanded(
                             child: TextButton.icon(
-                              icon: const Icon(Icons.calendar_today, color: AppTheme.accentColor),
-                              label: Text(DateFormat('yyyy-MM-dd').format(_endDate), style: const TextStyle(color: Colors.white)),
+                              icon: const Icon(Icons.calendar_today, color: AppTheme.maroon),
+                              label: Text(DateFormat('yyyy-MM-dd').format(_endDate), style: const TextStyle(color: AppTheme.textPrimary)),
                               onPressed: () async {
                                 final date = await showDatePicker(
                                   context: context,
                                   initialDate: _endDate,
                                   firstDate: DateTime(2000),
                                   lastDate: DateTime(2100),
-                                  builder: (context, child) => Theme(data: AppTheme.darkTheme, child: child!),
+                                  builder: (context, child) => Theme(data: AppTheme.warmTheme, child: child!),
                                 );
                                 if (date != null) setState(() => _endDate = date);
                               },
@@ -178,32 +178,32 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                       const SizedBox(height: 8),
                       DropdownButtonFormField<String>(
                         value: _selectedTrainerId,
-                        dropdownColor: AppTheme.cardBackground,
-                        style: const TextStyle(color: Colors.white),
+                        dropdownColor: Colors.white,
+                        style: const TextStyle(color: AppTheme.textPrimary),
                         items: [
                           const DropdownMenuItem(value: null, child: Text('None')),
                           ...trainerProvider.trainers.map(
                               (e) => DropdownMenuItem(value: e.id, child: Text(e.name))),
                         ],
                         onChanged: (val) => setState(() => _selectedTrainerId = val),
-                        decoration: const InputDecoration(labelText: 'Assign Trainer', labelStyle: TextStyle(color: Colors.white70)),
+                        decoration: const InputDecoration(labelText: 'Assign Trainer', labelStyle: TextStyle(color: AppTheme.textSecondary)),
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _notesController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(labelText: 'Notes', labelStyle: TextStyle(color: Colors.white70)),
+                        style: const TextStyle(color: AppTheme.textPrimary),
+                        decoration: const InputDecoration(labelText: 'Notes', labelStyle: TextStyle(color: AppTheme.textSecondary)),
                         maxLines: 3,
                       ),
                       const SizedBox(height: 24),
                       if (memberProvider.isLoading || cloudinaryProvider.isUploading)
-                        const CircularProgressIndicator(color: Colors.white)
+                        const CircularProgressIndicator(color: AppTheme.maroon)
                       else
                         ElevatedButton(
                           onPressed: _saveMember,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.accentColor,
-                            foregroundColor: Colors.black,
+                            backgroundColor: AppTheme.maroon,
+                            foregroundColor: Colors.white,
                             minimumSize: const Size(double.infinity, 50),
                           ),
                           child: const Text('Save Member'),

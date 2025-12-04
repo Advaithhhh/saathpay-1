@@ -26,7 +26,7 @@ class LoginScreen extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.fitness_center, size: 80, color: Colors.white),
+                    const Icon(Icons.fitness_center, size: 80, color: AppTheme.maroon),
                     const SizedBox(height: 24),
                     Text(
                       'Gym Manager',
@@ -39,14 +39,14 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 48),
                     if (authProvider.isLoading)
-                      const CircularProgressIndicator(color: Colors.white)
+                      const CircularProgressIndicator(color: AppTheme.maroon)
                     else
                       ElevatedButton.icon(
                         icon: const Icon(Icons.login),
                         label: const Text('Sign in with Google'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: AppTheme.primaryColor,
+                          backgroundColor: AppTheme.maroon,
+                          foregroundColor: Colors.white,
                           minimumSize: const Size(double.infinity, 50),
                         ),
                         onPressed: () async {

@@ -27,7 +27,7 @@ class PaymentListScreen extends StatelessWidget {
         ),
         child: SafeArea(
           child: payments.isEmpty
-              ? const Center(child: Text('No payments found', style: TextStyle(color: Colors.white)))
+              ? const Center(child: Text('No payments found', style: TextStyle(color: AppTheme.textSecondary)))
               : ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: payments.length,
@@ -49,12 +49,12 @@ class PaymentListScreen extends StatelessWidget {
                             children: [
                               Text(
                                 '\u20B9${payment.amount}',
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppTheme.accentColor),
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppTheme.maroon),
                               ),
                               Text(
                                 payment.status,
                                 style: TextStyle(
-                                  color: payment.status == 'Paid' ? Colors.greenAccent : Colors.redAccent,
+                                  color: payment.status == 'Paid' ? Colors.green : Colors.red,
                                   fontSize: 12,
                                 ),
                               ),
@@ -68,14 +68,14 @@ class PaymentListScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppTheme.accentColor,
+        backgroundColor: AppTheme.secondaryColor,
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const AddPaymentScreen()),
           );
         },
-        child: const Icon(Icons.add, color: Colors.black),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

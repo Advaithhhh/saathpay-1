@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:saathpay/providers/theme_provider.dart';
 import 'package:saathpay/screens/auth/login_screen.dart';
 import 'package:saathpay/screens/dashboard/owner_dashboard.dart';
+import 'package:saathpay/screens/splash_screen.dart';
 import 'providers/auth_provider.dart';
 import 'providers/member_provider.dart';
 import 'providers/plan_provider.dart';
@@ -33,11 +34,8 @@ class GymApp extends StatelessWidget {
           return MaterialApp(
             title: 'Gym Management System',
             debugShowCheckedModeBanner: false,
-            // Force Dark Theme for Premium Look as default, or toggle
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: themeProvider.themeMode,
-            home: const AuthWrapper(),
+            theme: AppTheme.warmTheme,
+            home: const SplashScreen(),
           );
         },
       ),

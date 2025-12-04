@@ -27,7 +27,7 @@ class TrainerListScreen extends StatelessWidget {
         ),
         child: SafeArea(
           child: trainers.isEmpty
-              ? const Center(child: Text('No trainers found', style: TextStyle(color: Colors.white)))
+              ? const Center(child: Text('No trainers found', style: TextStyle(color: AppTheme.textSecondary)))
               : ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: trainers.length,
@@ -44,12 +44,12 @@ class TrainerListScreen extends StatelessWidget {
                                 ? NetworkImage(trainer.photoUrl!)
                                 : null,
                             child: trainer.photoUrl == null
-                                ? Text(trainer.name[0], style: const TextStyle(fontWeight: FontWeight.bold))
+                                ? Text(trainer.name[0], style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.maroon))
                                 : null,
                           ),
                           title: Text(trainer.name, style: AppTheme.titleMedium.copyWith(fontSize: 16)),
                           subtitle: Text(trainer.contact, style: AppTheme.bodyMedium),
-                          trailing: const Icon(Icons.chevron_right, color: Colors.white54),
+                          trailing: const Icon(Icons.chevron_right, color: AppTheme.maroon),
                           onTap: () {
                             Navigator.push(
                               context,
@@ -66,14 +66,14 @@ class TrainerListScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppTheme.accentColor,
+        backgroundColor: AppTheme.secondaryColor,
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const AddTrainerScreen()),
           );
         },
-        child: const Icon(Icons.add, color: Colors.black),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

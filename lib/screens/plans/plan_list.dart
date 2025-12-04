@@ -27,7 +27,7 @@ class PlanListScreen extends StatelessWidget {
         ),
         child: SafeArea(
           child: plans.isEmpty
-              ? const Center(child: Text('No plans found', style: TextStyle(color: Colors.white)))
+              ? const Center(child: Text('No plans found', style: TextStyle(color: AppTheme.textSecondary)))
               : ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: plans.length,
@@ -63,13 +63,13 @@ class PlanListScreen extends StatelessWidget {
                                   showDialog(
                                     context: context,
                                     builder: (ctx) => AlertDialog(
-                                      backgroundColor: AppTheme.cardBackground,
-                                      title: const Text('Delete Plan?', style: TextStyle(color: Colors.white)),
-                                      content: const Text('This cannot be undone.', style: TextStyle(color: Colors.white70)),
+                                      backgroundColor: AppTheme.cardColor,
+                                      title: const Text('Delete Plan?', style: TextStyle(color: AppTheme.textPrimary)),
+                                      content: const Text('This cannot be undone.', style: TextStyle(color: AppTheme.textSecondary)),
                                       actions: [
                                         TextButton(
                                           onPressed: () => Navigator.pop(ctx),
-                                          child: const Text('Cancel'),
+                                          child: const Text('Cancel', style: TextStyle(color: AppTheme.textSecondary)),
                                         ),
                                         TextButton(
                                           onPressed: () {
@@ -93,14 +93,14 @@ class PlanListScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppTheme.accentColor,
+        backgroundColor: AppTheme.secondaryColor,
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const AddPlanScreen()),
           );
         },
-        child: const Icon(Icons.add, color: Colors.black),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

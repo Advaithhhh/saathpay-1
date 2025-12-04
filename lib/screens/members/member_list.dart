@@ -31,96 +31,98 @@ class _MemberListScreenState extends State<MemberListScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppTheme.primaryGradient,
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: GlassCard(
-                  borderRadius: 12,
-                  child: TextField(
-                    controller: _searchController,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                      hintText: 'Search members...',
-                      hintStyle: TextStyle(color: Colors.white54),
-                      prefixIcon: Icon(Icons.search, color: Colors.white70),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                      filled: false,
+      body: SizedBox.expand(
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: AppTheme.primaryGradient,
+          ),
+          child: SafeArea(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: GlassCard(
+                    borderRadius: 12,
+                    child: TextField(
+                      controller: _searchController,
+                      style: const TextStyle(color: AppTheme.textPrimary),
+                      decoration: InputDecoration(
+                        hintText: 'Search members...',
+                        hintStyle: TextStyle(color: AppTheme.textSecondary.withOpacity(0.7)),
+                        prefixIcon: const Icon(Icons.search, color: AppTheme.maroon),
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        filled: false,
+                      ),
+                      onChanged: (value) {
+                        setState(() {
+                          _searchQuery = value;
+                        });
+                      },
                     ),
-                    onChanged: (value) {
-                      setState(() {
-                        _searchQuery = value;
-                      });
-                    },
                   ),
                 ),
-              ),
-              Expanded(
-                child: members.isEmpty
-                    ? const Center(child: Text('No members found', style: TextStyle(color: Colors.white)))
-                    : ListView.builder(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        itemCount: members.length,
-                        itemBuilder: (context, index) {
-                          final member = members[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 12.0),
-                            child: GlassCard(
-                              child: ListTile(
-                                contentPadding: const EdgeInsets.all(12),
-                                leading: Hero(
-                                  tag: 'member_${member.id}',
-                                  child: CircleAvatar(
-                                    radius: 25,
-                                    backgroundImage: member.profileImage != null
-                                        ? NetworkImage(member.profileImage!)
-                                        : null,
-                                    child: member.profileImage == null
-                                        ? Text(member.name[0], style: const TextStyle(fontWeight: FontWeight.bold))
-                                        : null,
-                                  ),
-                                ),
-                                title: Text(member.name, style: AppTheme.titleMedium.copyWith(fontSize: 16)),
-                                subtitle: Text(
-                                  '${member.membershipType} • ${member.status}',
-                                  style: TextStyle(
-                                    color: member.status == 'Active' ? Colors.greenAccent : Colors.redAccent,
-                                  ),
-                                ),
-                                trailing: const Icon(Icons.chevron_right, color: Colors.white54),
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => MemberDetailsScreen(member: member),
+                Expanded(
+                  child: members.isEmpty
+                      ? const Center(child: Text('No members found', style: TextStyle(color: AppTheme.textSecondary)))
+                      : ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount: members.length,
+                          itemBuilder: (context, index) {
+                            final member = members[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 12.0),
+                              child: GlassCard(
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.all(12),
+                                  leading: Hero(
+                                    tag: 'member_${member.id}',
+                                    child: CircleAvatar(
+                                      radius: 25,
+                                      backgroundImage: member.profileImage != null
+                                          ? NetworkImage(member.profileImage!)
+                                          : null,
+                                      child: member.profileImage == null
+                                          ? Text(member.name[0], style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.maroon))
+                                          : null,
                                     ),
-                                  );
-                                },
+                                  ),
+                                  title: Text(member.name, style: AppTheme.titleMedium.copyWith(fontSize: 16)),
+                                  subtitle: Text(
+                                    '${member.membershipType} • ${member.status}',
+                                    style: TextStyle(
+                                      color: member.status == 'Active' ? Colors.green : Colors.red,
+                                    ),
+                                  ),
+                                  trailing: const Icon(Icons.chevron_right, color: AppTheme.maroon),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => MemberDetailsScreen(member: member),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      ),
-              ),
-            ],
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppTheme.accentColor,
+        backgroundColor: AppTheme.secondaryColor,
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const AddMemberScreen()),
           );
         },
-        child: const Icon(Icons.person_add, color: Colors.black),
+        child: const Icon(Icons.person_add, color: Colors.white),
       ),
     );
   }

@@ -51,69 +51,69 @@ class _AddPaymentScreenState extends State<AddPaymentScreen> {
                     children: [
                       DropdownButtonFormField<String>(
                         value: _selectedMemberId,
-                        dropdownColor: AppTheme.cardBackground,
-                        style: const TextStyle(color: Colors.white),
+                        dropdownColor: Colors.white,
+                        style: const TextStyle(color: AppTheme.textPrimary),
                         items: memberProvider.members
                             .map((e) => DropdownMenuItem(value: e.id, child: Text(e.name)))
                             .toList(),
                         onChanged: (val) => setState(() => _selectedMemberId = val),
-                        decoration: const InputDecoration(labelText: 'Member', labelStyle: TextStyle(color: Colors.white70)),
+                        decoration: const InputDecoration(labelText: 'Member', labelStyle: TextStyle(color: AppTheme.textSecondary)),
                         validator: (value) => value == null ? 'Required' : null,
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
                         controller: _amountController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(labelText: 'Amount', labelStyle: TextStyle(color: Colors.white70)),
+                        style: const TextStyle(color: AppTheme.textPrimary),
+                        decoration: const InputDecoration(labelText: 'Amount', labelStyle: TextStyle(color: AppTheme.textSecondary)),
                         keyboardType: TextInputType.number,
                         validator: (value) => value!.isEmpty ? 'Required' : null,
                       ),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<String>(
                         value: _type,
-                        dropdownColor: AppTheme.cardBackground,
-                        style: const TextStyle(color: Colors.white),
+                        dropdownColor: Colors.white,
+                        style: const TextStyle(color: AppTheme.textPrimary),
                         items: ['Cash', 'Online', 'Card']
                             .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                             .toList(),
                         onChanged: (val) => setState(() => _type = val!),
-                        decoration: const InputDecoration(labelText: 'Payment Type', labelStyle: TextStyle(color: Colors.white70)),
+                        decoration: const InputDecoration(labelText: 'Payment Type', labelStyle: TextStyle(color: AppTheme.textSecondary)),
                       ),
                       const SizedBox(height: 8),
                       DropdownButtonFormField<String>(
                         value: _status,
-                        dropdownColor: AppTheme.cardBackground,
-                        style: const TextStyle(color: Colors.white),
+                        dropdownColor: Colors.white,
+                        style: const TextStyle(color: AppTheme.textPrimary),
                         items: ['Paid', 'Due']
                             .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                             .toList(),
                         onChanged: (val) => setState(() => _status = val!),
-                        decoration: const InputDecoration(labelText: 'Status', labelStyle: TextStyle(color: Colors.white70)),
+                        decoration: const InputDecoration(labelText: 'Status', labelStyle: TextStyle(color: AppTheme.textSecondary)),
                       ),
                       const SizedBox(height: 8),
                       TextButton.icon(
-                        icon: const Icon(Icons.calendar_today, color: AppTheme.accentColor),
-                        label: Text(DateFormat('yyyy-MM-dd').format(_date), style: const TextStyle(color: Colors.white)),
+                        icon: const Icon(Icons.calendar_today, color: AppTheme.maroon),
+                        label: Text(DateFormat('yyyy-MM-dd').format(_date), style: const TextStyle(color: AppTheme.textPrimary)),
                         onPressed: () async {
                           final date = await showDatePicker(
                             context: context,
                             initialDate: _date,
                             firstDate: DateTime(2000),
                             lastDate: DateTime(2100),
-                            builder: (context, child) => Theme(data: AppTheme.darkTheme, child: child!),
+                            builder: (context, child) => Theme(data: AppTheme.warmTheme, child: child!),
                           );
                           if (date != null) setState(() => _date = date);
                         },
                       ),
                       const SizedBox(height: 24),
                       if (paymentProvider.isLoading)
-                        const CircularProgressIndicator(color: Colors.white)
+                        const CircularProgressIndicator(color: AppTheme.maroon)
                       else
                         ElevatedButton(
                           onPressed: _savePayment,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: AppTheme.accentColor,
-                            foregroundColor: Colors.black,
+                            backgroundColor: AppTheme.maroon,
+                            foregroundColor: Colors.white,
                             minimumSize: const Size(double.infinity, 50),
                           ),
                           child: const Text('Save Payment'),
