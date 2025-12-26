@@ -86,3 +86,4 @@ git add .github/workflows/build-apk.yml
 git commit -m "Add GitHub Actions workflow for APK builds"
 git push origin main
 ```
+# SHA-1 configured in Firebase: 8C:53:72:83:EB:B7:70:19:C9:8D:BF:42:5E:52:C0:93:2D:42:08:00
