@@ -52,21 +52,21 @@ jobs:
       - name: Run Flutter doctor
         run: flutter doctor -v
       
-      # Print SHA-1 fingerprint for Firebase configuration
+      # Build APK (Release mode)
+      - name: Build APK
+        run: flutter build apk --release
+
+      # Print SHA-1 fingerprint for Firebase configuration (From APK)
       - name: Get SHA-1 Fingerprint
         run: |
           echo "=========================================="
           echo "SHA-1 FINGERPRINT FOR FIREBASE CONSOLE"
           echo "=========================================="
-          keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android 2>/dev/null | grep SHA1
+          keytool -printcert -jarfile build/app/outputs/flutter-apk/app-release.apk | grep SHA1
           echo "=========================================="
           echo "Copy the SHA1 value above and add it to:"
           echo "Firebase Console > Project Settings > Your Android App > SHA certificate fingerprints"
           echo "=========================================="
-      
-      # Build APK (Release mode)
-      - name: Build APK
-        run: flutter build apk --release
       
       # Upload APK as artifact
       - name: Upload APK
