@@ -13,7 +13,7 @@ generated_plugin_registrant.dart
 # ---------------------------------------------------------
 # Firebase Config Files (DO NOT COMMIT)
 # ---------------------------------------------------------
-lib/firebase_options.dart
+# lib/firebase_options.dart  # Commented out to allow CI/CD builds
 android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 macos/Runner/GoogleService-Info.plist

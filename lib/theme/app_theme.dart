@@ -262,7 +262,7 @@ class AppTheme {
         ),
         iconTheme: const IconThemeData(color: Colors.white, size: 24),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: cardColor,
         elevation: 0,
         shadowColor: maroon.withOpacity(0.1),
