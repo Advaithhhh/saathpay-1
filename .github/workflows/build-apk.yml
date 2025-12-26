@@ -56,17 +56,10 @@ jobs:
       - name: Build APK
         run: flutter build apk --release
 
-      # Print SHA-1 fingerprint for Firebase configuration (From APK)
-      - name: Get SHA-1 Fingerprint
-        run: |
-          echo "=========================================="
-          echo "SHA-1 FINGERPRINT FOR FIREBASE CONSOLE"
-          echo "=========================================="
-          keytool -printcert -jarfile build/app/outputs/flutter-apk/app-release.apk | grep SHA1
-          echo "=========================================="
-          echo "Copy the SHA1 value above and add it to:"
-          echo "Firebase Console > Project Settings > Your Android App > SHA certificate fingerprints"
-          echo "=========================================="
+      # Print Signing Report (SHA-1)
+      - name: Get Signing Report
+        working-directory: android
+        run: ./gradlew signingReport
       
       # Upload APK as artifact
       - name: Upload APK
